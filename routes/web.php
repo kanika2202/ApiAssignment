@@ -27,3 +27,8 @@ Route::get('/category', [CategoryController::class, 'create'])->name('category.c
 Route::post('/categoryStore', [CategoryController::class, 'store'])->name('category.store');
 
 Route::get('/categoryList', [CategoryController::class, 'list'])->name('category.list');
+
+Route::get('/categoryEdit/{id}', [CategoryController::class, 'categoryShowData'])->name('category.edit');
+Route::post('/categoryEdit', [CategoryController::class, 'categoryUpdate'])->name('category.update');
+Route::get('/categoryDelete/{id}', [CategoryController::class, 'categoryDelete']);
+
