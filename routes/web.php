@@ -4,6 +4,7 @@ use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -32,3 +33,9 @@ Route::get('/categoryEdit/{id}', [CategoryController::class, 'categoryShowData']
 Route::post('/categoryEdit', [CategoryController::class, 'categoryUpdate'])->name('category.update');
 Route::get('/categoryDelete/{id}', [CategoryController::class, 'categoryDelete']);
 
+Route::get('/product', [ProductController::class, 'product'])->name('product.create');
+Route::post('/productStore', [ProductController::class, 'productStore'])->name('product.store');
+Route::get('/productList', [ProductController::class, 'productList'])->name('product.list');
+Route::get('/productEdit/{id}', [ProductController::class, 'productShowData'])->name('product.edit');
+Route::post('/productEdit', [ProductController::class, 'productUpdate'])->name('product.update');
+Route::get('/productDelete/{id}', [ProductController::class, 'productDelete']);
