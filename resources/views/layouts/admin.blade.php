@@ -79,6 +79,9 @@
                    class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                     <i class="bi bi-box"></i> Products
                 </a>
+                <div class="list-group list-group-flush">
+                 <a href="{{ route('banner.list') }}" class="list-group-item list-group-item-action"><i class="bi bi-image"></i> Banners</a>
+                </div>
             </div>
         </aside>
 

@@ -16,9 +16,7 @@ use App\Http\Controllers\ProductController;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
 
 Route::get('/logins',[LoginController::class,'index']);
 Route::post('/logins',[LoginController::class,'save']);
@@ -39,3 +37,25 @@ Route::get('/productList', [ProductController::class, 'productList'])->name('pro
 Route::get('/productEdit/{id}', [ProductController::class, 'productShowData'])->name('product.edit');
 Route::post('/productEdit', [ProductController::class, 'productUpdate'])->name('product.update');
 Route::get('/productDelete/{id}', [ProductController::class, 'productDelete']);
+
+use App\Http\Controllers\BannerController;
+
+// Banner
+Route::get('/banner', [BannerController::class, 'create'])->name('banner.create');
+Route::post('/bannerStore', [BannerController::class, 'store'])->name('banner.store');
+Route::get('/bannerList', [BannerController::class, 'list'])->name('banner.list');
+Route::get('/bannerEdit/{id}', [BannerController::class, 'showEdit'])->name('banner.edit');
+Route::post('/bannerEdit', [BannerController::class, 'update'])->name('banner.update');
+Route::get('/bannerDelete/{id}', [BannerController::class, 'delete'])->name('banner.delete');
+use App\Http\Controllers\Front\FrontCategoryController;
+
+Route::get('/category/{id}/products', [FrontCategoryController::class, 'categoryProducts'])
+      ->name('front.category.products');
+
+use App\Http\Controllers\Front\HomeController;
+
+Route::get('/', [HomeController::class,'index'])->name('home');
+use App\Http\Controllers\Front\CategoryFrontController;
+
+Route::get('/categories', [CategoryFrontController::class, 'index'])
+    ->name('front.categories.index');
