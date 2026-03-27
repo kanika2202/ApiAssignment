@@ -60,6 +60,7 @@ use App\Http\Controllers\Front\CategoryFrontController;
 Route::get('/categories', [CategoryFrontController::class, 'index'])
     ->name('front.categories.index');
 
+
 Route::get('/products', [ProductController::class, 'index'])
     ->name('front.category_products.index');
 
@@ -67,3 +68,10 @@ Route::get('/products', [ProductController::class, 'index'])
 
 // Promotion Route
 Route::get('/promotions', [ProductController::class, 'promotion'])->name('front.promotions');
+use App\Http\Controllers\Front\CartFrontController;
+Route::get('/cart', [CartFrontController::class, 'index'])->name('cart.index');
+Route::post('/cart/add/{product}', [CartFrontController::class, 'add'])->name('cart.add');
+Route::post('/cart/update/{product}', [CartFrontController::class, 'update'])->name('cart.update');
+Route::delete('/cart/remove/{product}', [CartFrontController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/clear', [CartFrontController::class, 'clear'])->name('cart.clear');
+

@@ -114,6 +114,14 @@
         <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navMenu">
             <span class="navbar-toggler-icon"></span>
         </button>
+        
+        {{--Add Cart--}}
+        <div class="d-flex align-items-center gap-2">
+        <a href="{{ route('cart.index') }}" class="btn btn-dark rounded-pill px-3">
+        <i class="bi bi-cart3 me-1"></i> Cart
+        </a>
+        </div>
+
 
         {{-- Menu --}}
         <div class="collapse navbar-collapse" id="navMenu">
