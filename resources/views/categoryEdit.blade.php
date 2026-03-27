@@ -43,7 +43,7 @@
                     <img id="catEditPreview" src="" class="rounded border d-none" style="width:140px; height:auto;">
                 </div>
             </div>
-
+           
             <button class="btn btn-primary">Save Changes</button>
         </form>
     </div>

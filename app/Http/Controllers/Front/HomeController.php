@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
+use App\Models\Banner;
 
 class HomeController extends Controller
 {
@@ -41,9 +42,11 @@ class HomeController extends Controller
             default:           $q->orderBy('id', 'desc');
         }
 
-        $products = $q->paginate(8)->appends($request->query());
+        $products = $q->paginate(5)->appends($request->query());
         $categories = Category::orderBy('id','desc')->get();
-
-        return view('front.home', compact('products','categories'));
+        $banners = Banner::where('IsActive',1)
+                    ->orderBy('SortOrder')
+                    ->get();
+        return view('front.home', compact('products','categories','banners'));
     }
 }

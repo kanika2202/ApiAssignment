@@ -23,4 +23,5 @@ class FrontCategoryController extends Controller
 
     return view('front.category_products.index', compact('categories', 'category', 'products'));
 }
+
 }

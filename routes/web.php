@@ -59,3 +59,11 @@ use App\Http\Controllers\Front\CategoryFrontController;
 
 Route::get('/categories', [CategoryFrontController::class, 'index'])
     ->name('front.categories.index');
+
+Route::get('/products', [ProductController::class, 'index'])
+    ->name('front.category_products.index');
+
+
+
+// Promotion Route
+Route::get('/promotions', [ProductController::class, 'promotion'])->name('front.promotions');

@@ -13,6 +13,8 @@ class Product extends Model
         'Price',
         'ProductImage',
         'CategoryID',
+        'discount_percent', // New field for promotion
+        'is_promo',        // New field to toggle promotion
     ];
     function category()
     {

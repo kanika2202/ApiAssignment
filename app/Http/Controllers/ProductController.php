@@ -22,6 +22,7 @@ class ProductController extends Controller
             'productName'   => 'required|string|max:255',
             'price'         => 'required|numeric|min:0',
             'productImage'  => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'discount_percent' => 'nullable|numeric|min:0|max:100',
         ]);
 
         $newImageName = null;
@@ -36,6 +37,8 @@ class ProductController extends Controller
             'ProductName'  => $request->productName,
             'Price'        => $request->price,
             'ProductImage' => $newImageName,
+            'discount_percent'=> $request->discount_percent ?? 0,
+            'is_promo'        => $request->has('is_promo'), // Returns true if checked
         ]);
 
         return redirect('productList');
@@ -59,21 +62,25 @@ class ProductController extends Controller
         'productName'  => 'required|string|max:255',
         'price'        => 'required|numeric|min:0',
         'productImage' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+        'discount_percent' => 'nullable|numeric|min:0|max:100',
     ]);
 
     $Product = Product::findOrFail($request->id);
 
-    // update basic fields
+    // Basic update
     $Product->CategoryID  = $request->CategoryID;
     $Product->ProductName = $request->productName;
     $Product->Price       = $request->price;
 
-    // update image if uploaded
+    // ✅ ADD HERE (IMPORTANT)
+    $Product->discount_percent = $request->discount_percent ?? 0;
+    $Product->is_promo = $request->has('is_promo');
+
+    // Image update
     if ($request->hasFile('productImage')) {
         $newImageName = time() . '-' . $request->file('productImage')->getClientOriginalName();
         $request->file('productImage')->move(public_path('img/product'), $newImageName);
 
-        // (optional) delete old file
         if (!empty($Product->ProductImage) && file_exists(public_path('img/product/'.$Product->ProductImage))) {
             unlink(public_path('img/product/'.$Product->ProductImage));
         }
@@ -82,6 +89,7 @@ class ProductController extends Controller
     }
 
     $Product->save();
+
     return redirect('productList');
 }
     public function productDelete($id)
@@ -96,5 +104,21 @@ class ProductController extends Controller
         $Product->delete();
         return redirect('productList');
     }
+    public function index()
+{
+    $products = Product::latest()->get();
+    $categories = Category::all();
+
+    return view('front.category_products.index', compact('products', 'categories'));
+}
+public function promotion()
+{
+    $products = Product::where('is_promo', true)
+                ->where('discount_percent', '>', 0)
+                ->latest()
+                ->get();
+
+    return view('front.promotions.index', compact('products'));
+}
 }
 

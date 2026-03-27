@@ -17,6 +17,7 @@
                     <th style="width:180px;">Category</th>
                     <th style="width:120px;">Price</th>
                     <th style="width:140px;" class="text-center">Image</th>
+                    <th style="width:120px;" class="text-center">Discount</th>
                     <th style="width:200px;" class="text-center">Actions</th>
                 </tr>
             </thead>
@@ -39,6 +40,13 @@
                                 <img src="{{ asset('img/product/'.$Product->ProductImage) }}" width="70" class="rounded border">
                             @else
                                 <span class="badge text-bg-secondary">No Image</span>
+                            @endif
+                        </td>
+                        <td class="text-center">
+                            @if($Product->discount_percent > 0)
+                                <span class="badge text-bg-success">
+                                    {{ $Product->discount_percent }}% Off
+                                </span>
                             @endif
                         </td>
 
