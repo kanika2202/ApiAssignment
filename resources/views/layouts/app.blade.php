@@ -143,8 +143,10 @@
                     <input type="text" class="form-control" placeholder="Search...">
                 </form>
 
-                {{-- Flag --}}
-                <img src="https://flagcdn.com/w40/us.png" width="25">
+                {{-- admin --}}
+                <a href="{{ url('/category') }}">
+                    <i class="bi bi-person-lock fs-5 icon-btn"></i>
+                </a>
 
                 {{-- Icons --}}
                 <i class="bi bi-heart fs-5 icon-btn"></i>

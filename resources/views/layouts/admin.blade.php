@@ -82,6 +82,9 @@
                 <div class="list-group list-group-flush">
                  <a href="{{ route('banner.list') }}" class="list-group-item list-group-item-action"><i class="bi bi-image"></i> Banners</a>
                 </div>
+                <div class="list-group list-group-flush">
+                 <a href="{{ url('/') }}" class="list-group-item list-group-item-action"><i class="bi bi-arrow-left"></i> Back to Home page</a>
+                </div>
             </div>
         </aside>
 
