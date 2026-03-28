@@ -215,7 +215,11 @@ body {
 
             <div class="d-flex gap-2 mt-3">
                 <button class="btn btn-main w-100">Detail</button>
-                <button class="btn btn-warning">+</button>
+                <button type="button"
+                        class="btn btn-warning pill btn-sm py-2 px-3 flex-shrink-0 js-add-to-cart"
+                        data-url="{{ route('cart.add',$p->id) }}"
+                        data-name="{{ $p->ProductName }}">
+                  + Add
             </div>
         </div>
 
@@ -232,3 +236,53 @@ body {
 
 
 @endsection
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(document).ready(function() {
+    $('.js-add-to-cart').on('click', function(e) {
+        e.preventDefault();
+        
+        let url = $(this).data('url');
+        let productName = $(this).data('name');
+        let button = $(this);
+
+        // បង្ហាញ Loading បន្តិចលើប៊ូតុង
+        button.prop('disabled', true).html('...');
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}', // ចាំបាច់សម្រាប់ Laravel
+                qty: 1
+            },
+            success: function(response) {
+                if(response.ok) {
+                    // បង្ហាញសេចក្តីជូនដំណឹងស្អាតៗប្រើ SweetAlert2
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ជោគជ័យ!',
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end'
+                    });
+
+                    // បើអ្នកមានកន្លែងបង្ហាញលេខក្នុង Cart Icon អាច Update នៅទីនេះ
+                    $('.cart-count-badge').text(response.cart_count);
+                }
+            },
+            error: function(xhr) {
+                alert('មានបញ្ហាអ្វីមួយ! សូមព្យាយាមម្តងទៀត។');
+            },
+            complete: function() {
+                // ដាក់ប៊ូតុងឱ្យមកសភាពដើមវិញ
+                button.prop('disabled', false).html('+ Add');
+            }
+        });
+    });
+});
+</script>

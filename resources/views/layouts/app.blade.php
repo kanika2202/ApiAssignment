@@ -115,14 +115,6 @@
             <span class="navbar-toggler-icon"></span>
         </button>
         
-        {{--Add Cart--}}
-        <div class="d-flex align-items-center gap-2">
-        <a href="{{ route('cart.index') }}" class="btn btn-dark rounded-pill px-3">
-        <i class="bi bi-cart3 me-1"></i> Cart
-        </a>
-        </div>
-
-
         {{-- Menu --}}
         <div class="collapse navbar-collapse" id="navMenu">
 
@@ -151,8 +143,11 @@
                 {{-- Icons --}}
                 <i class="bi bi-heart fs-5 icon-btn"></i>
 
-                <a href="{{ url('/cart') }}">
+                <a href="{{ route('cart.index') }}">
                     <i class="bi bi-cart3 fs-5 icon-btn"></i>
+                    <span class="badge bg-danger rounded-pill cart-count-badge">
+                        {{ array_sum(array_column(session('cart', []), 'qty')) }}
+                    </span>
                 </a>
 
                 @auth

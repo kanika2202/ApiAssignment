@@ -14,31 +14,40 @@ class CartFrontController extends Controller
         return view('front.cart.index', compact('cart'));
     }
 
-    public function add(Request $request, $product)
-    {
-        $qty = max(1, (int) $request->input('qty', 1));
-        $p = Product::findOrFail($product);
+   public function add(Request $request, $product)
+{
+    $qty = max(1, (int) $request->input('qty', 1));
+    $p = Product::findOrFail($product);
 
-        $cart = session()->get('cart', []);
+    // --- ចាប់ផ្ដើមគណនាតម្លៃ Promotion ---
+    $finalPrice = (float) $p->Price;
+    if ($p->discount_percent > 0) {
+        // រកតម្លៃដែលត្រូវលក់ពិតប្រាកដ (តម្លៃដើម - ចំនួនដែលបញ្ចុះ)
+        $finalPrice = $p->Price - ($p->Price * $p->discount_percent / 100);
+    }
+    // --- បញ្ចប់ការគណនា ---
 
-        if (isset($cart[$p->id])) {
-            $cart[$p->id]['qty'] += $qty;
-        } else {
-            $cart[$p->id] = [
-                'id'    => $p->id,
-                'name'  => $p->ProductName,
-                'price' => (float) $p->Price,
-                'image' => $p->ProductImage,
-                'qty'   => $qty,
-            ];
-        }
+    $cart = session()->get('cart', []);
 
-        session()->put('cart', $cart);
+    if (isset($cart[$p->id])) {
+        $cart[$p->id]['qty'] += $qty;
+    } else {
+        $cart[$p->id] = [
+            'id'    => $p->id,
+            'name'  => $p->ProductName,
+            'price' => $finalPrice, // ប្រើតម្លៃដែលគណនារួច (Promotion Price)
+            'image' => $p->ProductImage,
+            'qty'   => $qty,
+        ];
+    }
 
-        if ($request->expectsJson()) {
-            return response()->json([
-                'ok' => true,
-                'message' => "+ {$p->ProductName} (x{$qty}) added to cart!",
+    session()->put('cart', $cart);
+    // ... ផ្នែកផ្សេងទៀតរក្សាទុកដដែល
+
+    if ($request->expectsJson()) {
+        return response()->json([
+            'ok' => true,
+            'message' => "+ {$p->ProductName} (x{$qty}) added to cart!",
                 'cart_count' => array_sum(array_column($cart, 'qty')),
                 'subtotal' => number_format($this->subtotal($cart), 2),
             ]);

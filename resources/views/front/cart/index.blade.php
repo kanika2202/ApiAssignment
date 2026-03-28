@@ -295,3 +295,83 @@
   });
 </script>
 @endpush
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(document).ready(function() {
+    // បង្កើត Function សម្រាប់ Update
+    function updateCart(id, qty) {
+        $.ajax({
+            url: `{{ url('/cart/update') }}/${id}`,
+            type: 'PATCH', // ត្រូវនឹង Route::patch ក្នុង web.php
+            data: {
+                _token: '{{ csrf_token() }}',
+                qty: qty
+            },
+            success: function(response) {
+                if (response.ok) {
+                    // Update លេខនៅលើ Input
+                    $(`.js-qty[data-id="${id}"]`).val(qty);
+                    // Update តម្លៃ Line Total ($)
+                    $(`.js-line-total[data-id="${id}"]`).text(response.line_total);
+                    // Update Subtotal និង Total ខាងស្តាំ
+                    $('#subtotal').text(response.subtotal);
+                    $('#total').text(response.subtotal);
+                    
+                    console.log(response.message);
+                }
+            },
+            error: function(xhr) {
+                alert('Error updating cart');
+            }
+        });
+    }
+
+    // ចុចប៊ូតុង ដក (-)
+    $('.js-qty-minus').on('click', function() {
+        let id = $(this).data('id');
+        let input = $(`.js-qty[data-id="${id}"]`);
+        let currentQty = parseInt(input.value || input.val());
+        if (currentQty > 1) {
+            updateCart(id, currentQty - 1);
+        }
+    });
+
+    // ចុចប៊ូតុង បូក (+)
+    $('.js-qty-plus').on('click', function() {
+        let id = $(this).data('id');
+        let input = $(`.js-qty[data-id="${id}"]`);
+        let currentQty = parseInt(input.value || input.val());
+        updateCart(id, currentQty + 1);
+    });
+
+    // ប៊ូតុង លុប (Remove)
+    $('.js-remove').on('click', function() {
+        let id = $(this).data('id');
+        let url = $(this).data('url');
+
+        if (confirm('តើអ្នកពិតជាចង់លុបទំនិញនេះមែនទេ?')) {
+            $.ajax({
+                url: url,
+                type: 'DELETE', // ត្រូវនឹង Route::delete ក្នុង web.php
+                data: {
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.ok) {
+                        $(`#row-${id}`).remove(); // លុប Row ចេញពី Table
+                        $('#subtotal').text(response.subtotal);
+                        $('#total').text(response.subtotal);
+
+                        // បើអស់ទំនិញ ឱ្យវា Reload ដើម្បីបង្ហាញថា Cart Empty
+                        if ($('tbody tr').length === 0) {
+                            location.reload();
+                        }
+                    }
+                }
+            });
+        }
+    });
+});
+</script>
