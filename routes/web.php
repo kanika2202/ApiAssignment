@@ -75,6 +75,12 @@ Route::post('/cart/add/{product}', [CartFrontController::class, 'add'])->name('c
 Route::patch('/cart/update/{product}', [CartFrontController::class, 'update'])->name('cart.update');
 Route::delete('/cart/remove/{product}', [CartFrontController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/clear', [CartFrontController::class, 'clear'])->name('cart.clear');
-Route::post('/cart/clear', [CartFrontController::class, 'clear'])->name('cart.clear');
 
 Route::get('/product/{product}', [ProductFrontController::class,'show'])->name('products.show');
+
+// Checkout Routes 
+use App\Http\Controllers\Front\CheckoutController;
+
+Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout.index');
+Route::post('/checkout', [CheckoutController::class,'store'])->name('checkout.store');
+Route::get('/checkout/success/{order}', [CheckoutController::class,'success'])->name('checkout.success');

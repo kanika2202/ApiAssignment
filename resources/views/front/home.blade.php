@@ -214,7 +214,7 @@ body {
 </div>
 
             <div class="d-flex gap-2 mt-3">
-                <button class="btn btn-main w-100">Detail</button>
+                <a class="btn btn-main w-100"  href="{{ route('products.show',$p->id) }}">Detail</a>
                 <button type="button"
                         class="btn btn-warning pill btn-sm py-2 px-3 flex-shrink-0 js-add-to-cart"
                         data-url="{{ route('cart.add',$p->id) }}"
