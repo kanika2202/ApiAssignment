@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\Front\ProductFrontController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -75,3 +76,4 @@ Route::post('/cart/update/{product}', [CartFrontController::class, 'update'])->n
 Route::delete('/cart/remove/{product}', [CartFrontController::class, 'remove'])->name('cart.remove');
 Route::post('/cart/clear', [CartFrontController::class, 'clear'])->name('cart.clear');
 
+Route::get('/product/{product}', [ProductFrontController::class,'show'])->name('products.show');
