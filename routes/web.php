@@ -84,3 +84,18 @@ use App\Http\Controllers\Front\CheckoutController;
 Route::get('/checkout', [CheckoutController::class,'index'])->name('checkout.index');
 Route::post('/checkout', [CheckoutController::class,'store'])->name('checkout.store');
 Route::get('/checkout/success/{order}', [CheckoutController::class,'success'])->name('checkout.success');
+
+use App\Http\Controllers\QrcodeController;
+
+Route::get('/qrcode', [QrcodeController::class, 'index'])->name('qrcode.index');
+Route::post('/qrcodeStore', [QrcodeController::class, 'store'])->name('qrcode.store'); // ប្តូរឈ្មោះឱ្យស្រួលចំណាំ
+Route::get('/qrcodeDelete/{id}', [QrcodeController::class, 'delete'])->name('qrcode.delete'); // ប្រើ get ដើម្បីស្រួលហៅពី <a> tag
+
+use App\Http\Controllers\Admin\OrderController;
+
+Route::prefix('admin')->group(function () {
+    Route::get('/orders', [OrderController::class, 'index'])->name('admin.orders.index');
+    Route::get('/orders/history', [OrderController::class, 'history'])->name('admin.orders.history');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('admin.orders.show');
+    Route::get('/orders/{id}/status/{status}', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
+});

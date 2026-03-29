@@ -79,9 +79,21 @@
                    class="list-group-item list-group-item-action d-flex align-items-center gap-2">
                     <i class="bi bi-box"></i> Products
                 </a>
+               <a href="{{ route('admin.orders.index') }}" class="list-group-item">
+                  🛒 Orders
+               </a>
+
+              <a href="{{ route('admin.orders.history') }}" class="list-group-item">
+                📦 Order History
+               </a>
+        <hr class="my-2">
                 <div class="list-group list-group-flush">
                  <a href="{{ route('banner.list') }}" class="list-group-item list-group-item-action"><i class="bi bi-image"></i> Banners</a>
                 </div>
+                <a href="{{ route('qrcode.index') }}" 
+                   class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+                   <i class="bi bi-qr-code-scan"></i> Manage QR Codes
+               </a>
                 <div class="list-group list-group-flush">
                  <a href="{{ url('/') }}" class="list-group-item list-group-item-action"><i class="bi bi-arrow-left"></i> Back to Home page</a>
                 </div>

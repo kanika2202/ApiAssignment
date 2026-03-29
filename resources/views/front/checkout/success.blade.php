@@ -1,92 +1,71 @@
 @extends('layouts.app')
-
-@section('title','Order Success')
-@section('hero_title','Order Placed ✅')
-@section('hero_subtitle','Thank you! Your order has been created.')
-@section('hero_action')
-  <a class="btn btn-dark pill px-4" href="{{ route('home') }}">
-    <i class="bi bi-house me-1"></i> Back to Home
-  </a>
-@endsection
-
-@section('breadcrumb')
-  <nav aria-label="breadcrumb">
-    <ol class="breadcrumb mb-0">
-      <li class="breadcrumb-item"><a href="{{ url('/') }}" class="text-decoration-none">Home</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Success</li>
-    </ol>
-  </nav>
-@endsection
-
 @section('content')
-  <div class="card soft-card p-3 p-md-4">
-    <div class="d-flex justify-content-between align-items-start gap-2">
-      <div>
-        <h4 class="fw-bold mb-1">Order #{{ $order->id }}</h4>
-        <div class="text-muted small">Status: {{ $order->status }} • Payment: {{ $order->payment_method }} ({{ $order->payment_status }})</div>
-      </div>
-      <span class="badge bg-light text-dark border pill">Success</span>
-    </div>
-
-    <hr>
-
-    <div class="row g-3">
-      <div class="col-md-6">
-        <div class="fw-bold mb-2">Customer</div>
-        <div class="text-muted">
-          {{ $order->customer_name }}<br>
-          {{ $order->customer_phone }}
+<div class="container py-5">
+    <div class="printable-area card border-0 shadow-sm p-5 rounded-4 mx-auto" style="max-width: 800px;">
+        <div class="text-center d-print-none mb-4">
+            <div class="display-1 text-success mb-2"><i class="bi bi-check-circle-fill"></i></div>
+            <h2 class="fw-bold">Order Success!</h2>
+            <button onclick="window.print()" class="btn btn-outline-dark pill mt-3 px-4">
+                <i class="bi bi-printer me-2"></i> Print Invoice
+            </button>
         </div>
-      </div>
 
-      <div class="col-md-6">
-        <div class="fw-bold mb-2">Address</div>
-        <div class="text-muted">
-          {{ $order->address_line }}<br>
-          {{ $order->city }}
+        <div class="d-flex justify-content-between mb-4">
+            <div>
+                <h4 class="fw-bold mb-0">INVOICE</h4>
+                <small class="text-muted">Order ID: #{{ $order->id }}</small>
+            </div>
+            <div class="text-end text-muted small">Date: {{ $order->created_at->format('d-M-Y') }}</div>
         </div>
-      </div>
-    </div>
 
-    <hr>
+        <div class="row mb-4">
+            <div class="col-6">
+                <label class="small text-muted fw-bold">BILL TO:</label>
+                <div class="fw-bold">{{ $order->customer_name }}</div>
+                <div>{{ $order->customer_phone }}</div>
+                <div class="small">{{ $order->address_line }}</div>
+            </div>
+            <div class="col-6 text-end">
+                <label class="small text-muted fw-bold">PAYMENT:</label>
+                <div class="fw-bold">{{ strtoupper($order->payment_method) }}</div>
+                <div class="small text-success">{{ $order->payment_status }}</div>
+            </div>
+        </div>
 
-    <div class="fw-bold mb-2">Items</div>
-    <div class="table-responsive">
-      <table class="table align-middle mb-0">
-        <thead class="text-muted small">
-          <tr>
-            <th>Product</th>
-            <th class="text-center">Price</th>
-            <th class="text-center">Qty</th>
-            <th class="text-end">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          @foreach($order->items as $it)
-            <tr>
-              <td class="fw-semibold">{{ $it->product_name }}</td>
-              <td class="text-center">${{ number_format($it->price,2) }}</td>
-              <td class="text-center">{{ $it->qty }}</td>
-              <td class="text-end fw-bold">${{ number_format($it->line_total,2) }}</td>
-            </tr>
-          @endforeach
-        </tbody>
-      </table>
-    </div>
+        <table class="table align-middle">
+            <thead class="table-light">
+                <tr><th>Product</th><th class="text-center">Qty</th><th class="text-end">Total</th></tr>
+            </thead>
+            <tbody>
+                @foreach($order->items as $it)
+                <tr>
+                    <td>{{ $it->product_name }}</td>
+                    <td class="text-center">{{ $it->qty }}</td>
+                    <td class="text-end fw-bold">${{ number_format($it->line_total, 2) }}</td>
+                </tr>
+                @endforeach
+            </tbody>
+        </table>
 
-    <hr>
+        <div class="row justify-content-end text-end mt-4">
+            <div class="col-md-4">
+                <div class="d-flex justify-content-between border-bottom py-2">
+                    <span>Subtotal:</span><span>${{ number_format($order->subtotal, 2) }}</span>
+                </div>
+                <div class="d-flex justify-content-between py-2">
+                    <span class="fw-bold fs-5">Total:</span><span class="fw-bold fs-5 text-primary">${{ number_format($order->total, 2) }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <div class="d-flex justify-content-between">
-      <span class="text-muted">Subtotal</span>
-      <span class="fw-semibold">${{ number_format($order->subtotal,2) }}</span>
-    </div>
-    <div class="d-flex justify-content-between mt-2">
-      <span class="text-muted">Shipping</span>
-      <span class="fw-semibold">${{ number_format($order->shipping,2) }}</span>
-    </div>
-    <div class="d-flex justify-content-between mt-2">
-      <span class="fw-bold">Total</span>
-      <span class="fw-bold fs-5">${{ number_format($order->total,2) }}</span>
-    </div>
-  </div>
+<style>
+    @media print {
+        body * { visibility: hidden; }
+        .printable-area, .printable-area * { visibility: visible; }
+        .printable-area { position: absolute; left: 0; top: 0; width: 100%; border: none; }
+        .d-print-none { display: none !important; }
+    }
+</style>
 @endsection

@@ -8,14 +8,26 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
-
+use App\Models\Qrcode;
 
 class CheckoutController extends Controller
 {
      public function index()
     {
         $cart = session()->get('cart', []);
-        return view('front.checkout.index', compact('cart'));
+        
+        // ១. គណនា Total ឡើងវិញសម្រាប់បង្ហាញក្នុង Modal
+        $total = 0;
+        foreach ($cart as $it) {
+            $total += ((float)$it['price']) * ((int)$it['qty']);
+        }
+
+        // ២. ទាញយក QR Code ដែលបាន Upload ចុងក្រោយគេ
+        // យើងប្រើ latest()->first() ដើម្បីយកតែ ១ ដែលថ្មីជាងគេ
+        $activeQR = Qrcode::latest()->first(); 
+
+        // ៣. បញ្ជូន Variable 'total' និង 'activeQR' ទៅកាន់ View
+        return view('front.checkout.index', compact('cart', 'total', 'activeQR'));
     }
 
     public function store(Request $request)

@@ -94,11 +94,30 @@
 
         <hr class="my-3">
 
-        <div class="d-flex align-items-center justify-content-between">
-          <div>
-            <div class="text-muted small mb-1">Price</div>
-            <div class="fs-3 fw-bold">${{ number_format($product->Price, 2) }}</div>
-          </div>
+{{-- REMOVED @foreach($products as $p) --}}
+
+<div class="d-flex align-items-center justify-content-between">
+  <div>
+    <div class="text-muted small mb-1">Price</div>
+    @if($product->discount_percent > 0)
+      <span class="text-muted text-decoration-line-through">
+          ${{ number_format($product->Price, 2) }}
+      </span>
+
+      <span class="fw-bold text-warning ms-2  fs-3">
+          ${{ number_format($product->Price - ($product->Price * $product->discount_percent / 100), 2) }}
+      </span>
+    @else
+      <span class="fw-bold text-warning fs-3">
+          ${{ number_format($product->Price, 2) }}
+      </span>
+    @endif
+  </div>
+
+  {{-- ... (Rating Div) ... --}}
+
+
+{{-- REMOVED @endforeach --}}
           <div class="text-end">
             <div class="text-muted small mb-1">Rating</div>
             <div class="fw-semibold">
@@ -111,24 +130,29 @@
             </div>
           </div>
         </div>
-
         {{-- Short description (optional) --}}
         <div class="mt-3 text-muted">
           {{ $product->Description ?? 'High quality product with modern design. Perfect for daily use and easy to order.' }}
         </div>
-
         <hr class="my-3">
 
         {{-- Qty + Add to cart --}}
-        <div class="row g-2 align-items-end">
-          <div class="col-5 col-md-4">
-            <label class="form-label small text-muted mb-1">Quantity</label>
-            <div class="input-group">
-              <button type="button" class="btn btn-outline-dark pill" id="qtyMinus">-</button>
-              <input type="number" id="qty" class="form-control text-center pill" value="1" min="1">
-              <button type="button" class="btn btn-outline-dark pill" id="qtyPlus">+</button>
-            </div>
-          </div>
+<div class="row g-2 align-items-end">
+  <div class="col-5 col-md-4">
+    <label class="form-label small text-muted mb-1">Quantity</label>
+    <div class="input-group" style="max-width:160px;">
+      <button class="btn btn-outline-dark pill js-qty-minus" type="button" id="qtyMinus">-</button>
+
+      <input class="form-control text-center pill js-qty" 
+             id="qty"
+             type="number" 
+             min="1" 
+             value="1" {{-- Default to 1 --}}
+             data-id="{{ $product->id }}">
+
+      <button class="btn btn-outline-dark pill js-qty-plus" type="button" id="qtyPlus">+</button>
+    </div>
+  </div>
 
           <div class="col-7 col-md-8 d-flex gap-2">
             <button type="button"
@@ -217,12 +241,14 @@
 
             <div class="card-body d-flex flex-column">
               <div class="fw-bold line-clamp-2">{{ $rp->ProductName }}</div>
-              <div class="text-muted small mb-2">${{ number_format($rp->Price,2) }}</div>
-
+              <div class="d-flex justify-content-between align-items-center mt-2">
+              <div class="fw-bold text-warning">${{ number_format($rp->Price,2) }}</div>
+              <div><button class="btn btn-light rounded-circle shadow-sm mb-2">❤</button></div>
+              </div>
               <div class="mt-auto d-flex gap-2">
-                <a class="btn btn-dark pill w-100" href="{{ url('product',$rp->id) }}">Detail</a>
+                <a class="btn btn-main pill w-100" href="{{ url('product',$rp->id) }}">Detail</a>
                 <button type="button"
-                        class="btn btn-success pill w-100 js-add-to-cart"
+                        class="btn btn-warning pill w-100 js-add-to-cart"
                         data-url="{{ route('cart.add',$rp->id) }}"
                         data-name="{{ $rp->ProductName }}">
                   + Add
@@ -298,3 +324,53 @@
   });
 </script>
 @endpush
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+$(document).ready(function() {
+    $('.js-add-to-cart').on('click', function(e) {
+        e.preventDefault();
+        
+        let url = $(this).data('url');
+        let productName = $(this).data('name');
+        let button = $(this);
+
+        // បង្ហាញ Loading បន្តិចលើប៊ូតុង
+        button.prop('disabled', true).html('...');
+
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {
+                _token: '{{ csrf_token() }}', // ចាំបាច់សម្រាប់ Laravel
+                qty: 1
+            },
+            success: function(response) {
+                if(response.ok) {
+                    // បង្ហាញសេចក្តីជូនដំណឹងស្អាតៗប្រើ SweetAlert2
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'ជោគជ័យ!',
+                        text: response.message,
+                        timer: 2000,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end'
+                    });
+
+                    // បើអ្នកមានកន្លែងបង្ហាញលេខក្នុង Cart Icon អាច Update នៅទីនេះ
+                    $('.cart-count-badge').text(response.cart_count);
+                }
+            },
+            error: function(xhr) {
+                alert('មានបញ្ហាអ្វីមួយ! សូមព្យាយាមម្តងទៀត។');
+            },
+            complete: function() {
+                // ដាក់ប៊ូតុងឱ្យមកសភាពដើមវិញ
+                button.prop('disabled', false).html('+ Add');
+            }
+        });
+    });
+});
+</script>

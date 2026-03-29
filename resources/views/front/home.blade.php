@@ -220,6 +220,7 @@ body {
                         data-url="{{ route('cart.add',$p->id) }}"
                         data-name="{{ $p->ProductName }}">
                   + Add
+                </button>
             </div>
         </div>
 
