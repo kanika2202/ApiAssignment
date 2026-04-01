@@ -116,3 +116,4 @@ Route::get('/test-mail', function () {
     Mail::to('karonasim98@gmail.com')->send(new OrderMail($order));
     return "Email Sent!";
 });
+

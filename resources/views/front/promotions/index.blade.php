@@ -24,90 +24,56 @@
 
             {{-- Product Image --}}
             <div class="text-center p-3">
-                @if($product->ProductImage)
-                    <img src="{{ asset('img/product/' . $product->ProductImage) }}"
-                         class="img-fluid rounded"
-                         style="height: 200px; object-fit: cover;">
-                @else
-                    <img src="{{ asset('img/default-flower.jpg') }}"
-                         class="img-fluid rounded"
-                         style="height: 200px; object-fit: cover;">
-                @endif
+                <img src="{{ $product->ProductImage 
+                    ? asset('img/product/' . $product->ProductImage) 
+                    : asset('img/default-flower.jpg') }}"
+                     class="img-fluid rounded"
+                     style="height: 200px; object-fit: cover;">
             </div>
 
-            <div class="card-body text-left pt-0">
-               {{-- Product Name --}}
-                <h5 class="card-title fw-bold">
-                    {{ $product->ProductName }}
-                </h5>
-                {{-- Category --}}
-                <small class="text-muted text-uppercase mb-1 d-block">
+            <div class="card-body pt-0">
+                <h5 class="fw-bold">{{ $product->ProductName }}</h5>
+
+                <small class="text-muted d-block">
                     category: {{ $product->category->CategoryName ?? 'Flowers' }}
                 </small>
 
-               
-
-                {{-- Price Calculation --}}
                 @php
-                    $originalPrice = $product->Price;
-                    $discount = $product->discount_percent;
-                    $finalPrice = $originalPrice - ($originalPrice * $discount / 100);
+                    $finalPrice = $product->Price - ($product->Price * $product->discount_percent / 100);
                 @endphp
 
-                <div class="d-flex justify-content-between gap-2 mb-3 mt-2 align-items-center">
+                <div class="d-flex justify-content-between mt-2">
 
-                    {{-- Old Price --}}
-                    @if($discount > 0)
-                    <span class="text-decoration-line-through  fs-6 text-danger">
-                        ${{ number_format($originalPrice, 2) }}
+                    @if($product->discount_percent > 0)
+                    <span class="text-danger text-decoration-line-through">
+                        ${{ number_format($product->Price, 2) }}
                     </span>
                     @endif
 
-                    {{-- New Price --}}
-                    <span class="text-warning fw-bold fs-6">
+                    <span class="text-warning fw-bold">
                         ${{ number_format($finalPrice, 2) }}
                     </span>
-                    <button class="btn btn-light rounded-circle shadow-sm">
-                         ❤
-                     </button>
-
                 </div>
 
-                {{-- Button --}}
-              <div class="d-flex gap-2 mt-3">
-                  <button class="btn btn-main w-100">Detail</button>
-                  <button type="button" 
-                   class="btn btn-warning pill btn-sm py-2 px-3 flex-shrink-0 js-add-to-cart"
-                     data-url="{{ route('cart.add', $product->id) }}"
-                     data-name="{{ $product->ProductName }}">
-                     <i class="bi bi-cart-plus me-1"></i> Add to Cart
-                  </button>
-              </div>
+                <div class="d-flex gap-2 mt-3">
+                    <button class="btn btn-main w-100">Detail</button>
+
+                    <button type="button" 
+                        class="btn btn-warning js-add-to-cart"
+                        data-url="{{ route('cart.add', $product->id) }}"
+                        data-name="{{ $product->ProductName }}">
+                        Add
+                    </button>
+                </div>
+
             </div>
         </div>
-    @empty
-
-    {{-- No Promotion --}}
-    <div class="row g-4">
-
-    @forelse($products as $product)
-        <div class="col-md-4 col-lg-3">
-            {{-- product card here --}}
-        </div>
+    </div>
 
     @empty
-    {{-- No Promotions Available --}}
-        <div class="col-12">
-            <div class="text-center py-5">
-                <h5 class="text-muted">
-                    No promotions available right now 🌼
-                </h5>
-            </div>
-        </div>
-    @endforelse
-
-</div>
-
+    <div class="col-12 text-center py-5">
+        <h5 class="text-muted">No promotions available 🌼</h5>
+    </div>
     @endforelse
 
 </div>
