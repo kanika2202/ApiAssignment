@@ -9,6 +9,11 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\Qrcode;
+use App\Services\TelegramService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderMail;
+
 
 class CheckoutController extends Controller
 {
@@ -114,6 +119,31 @@ class CheckoutController extends Controller
 
             return $order;
         });
+
+        // --- បញ្ជូនសារទៅ Telegram ---
+        try {
+            $telegram = new TelegramService();
+            $msg = "🛒 <b>ការកុម្ម៉ង់ថ្មី! (New Order)</b>\n\n"
+                 . "🆔 លេខកុម្ម៉ង់: {$order->id}\n"                                           
+                 . "👤 អតិថិជន: {$order->customer_name}\n"
+                 . "📞 លេខទូរស័ព្ទ: {$order->customer_phone}\n"
+                 . "💰 សរុប: <b>$" . number_format($order->total, 2) . "</b>\n"
+                 . "💳 បង់ប្រាក់តាម: " . strtoupper($order->payment_method) . "\n"
+                 . "📍 ទីតាំង: {$order->address_line}\n\n"
+                 . "👉 សូមឆែកមើលក្នុង Admin Panel!";
+            
+            $telegram->send($msg);
+        } catch (\Exception $e) {
+            Log::error("Telegram Notification Failed: " . $e->getMessage());
+        }
+        // --- បញ្ជូនសារទៅ Gmail (បន្ថែមថ្មី) ---
+        try {
+            // ផ្ញើទៅ Admin ឬ ទៅកាន់អតិថិជន (ប្រសិនបើមាន Email អតិថិជន)
+            Mail::to('karonasim98@gmail.com')->send(new OrderMail($order));
+        } catch (\Exception $e) {
+            Log::error("Gmail Error: " . $e->getMessage());
+        }
+
 
         // clear cart after create order
         session()->forget('cart');

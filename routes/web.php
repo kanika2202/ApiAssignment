@@ -99,3 +99,20 @@ Route::prefix('admin')->group(function () {
     Route::get('/orders/{id}', [OrderController::class, 'show'])->name('admin.orders.show');
     Route::get('/orders/{id}/status/{status}', [OrderController::class, 'updateStatus'])->name('admin.orders.updateStatus');
 });
+
+//Telegram Log API Routes
+use App\Http\Controllers\TelegramLogController;
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::apiResource('telegram-logs', TelegramLogController::class);
+});
+// Test Maile Route
+use App\Models\Order;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\OrderMail;
+
+Route::get('/test-mail', function () {
+    $order = Order::with('items')->latest()->first(); // យក order ចុងក្រោយ
+    Mail::to('karonasim98@gmail.com')->send(new OrderMail($order));
+    return "Email Sent!";
+});
