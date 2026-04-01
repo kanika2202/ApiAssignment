@@ -113,7 +113,7 @@ use App\Mail\OrderMail;
 
 Route::get('/test-mail', function () {
     $order = Order::with('items')->latest()->first(); // យក order ចុងក្រោយ
-    Mail::to('karonasim98@gmail.com')->send(new OrderMail($order));
+    Mail::to('kanikatouch34@gmail.com')->send(new OrderMail($order));
     return "Email Sent!";
 });
 

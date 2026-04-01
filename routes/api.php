@@ -19,14 +19,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // ចាប់ផ្តើមប្រើ Middleware 'access.token' ដើម្បីការពារ Route ខាងក្រោមទាំងអស់
 Route::middleware('access.token')->group(function () {
 
-    // --- Product APIs ---
-    Route::prefix('products')->group(function () {
-        Route::get('/', [ProductsController::class, 'index']);      
-        Route::post('/', [ProductsController::class, 'store']);    
-        Route::get('/{id}', [ProductsController::class, 'show']);
-        Route::put('/{product}', [ProductsController::class, 'update']);   
-        Route::delete('/{product}', [ProductsController::class, 'destroy']);  
-    });
+   
     Route::get('/category/{id}/products', [ProductsController::class, 'getByCategory']); 
 
     // --- Cart APIs ---
@@ -38,6 +31,15 @@ Route::middleware('access.token')->group(function () {
     });
 
     // --- Order API ---
+    
     Route::post('/place-order', [OrderApiController::class, 'placeOrder']);
 
 });
+ // --- Product APIs ---
+    Route::prefix('products')->group(function () {
+        Route::get('/', [ProductsController::class, 'index']);      
+        Route::post('/', [ProductsController::class, 'store']);    
+        Route::get('/{id}', [ProductsController::class, 'show']);
+        Route::put('/{product}', [ProductsController::class, 'update']);   
+        Route::delete('/{product}', [ProductsController::class, 'destroy']);  
+    });
