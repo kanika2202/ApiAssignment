@@ -42,7 +42,7 @@ class HomeController extends Controller
             default:           $q->orderBy('id', 'desc');
         }
 
-        $products = $q->paginate(5)->appends($request->query());
+        $products = $q->paginate(8)->appends($request->query());
         $categories = Category::orderBy('id','desc')->get();
         $banners = Banner::where('IsActive',1)
                     ->orderBy('SortOrder')

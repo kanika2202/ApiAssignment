@@ -150,11 +150,7 @@
                     </span>
                 </a>
 
-                @auth
-                    <i class="bi bi-person fs-5 icon-btn"></i>
-                @else
-                    <a href="{{ url('login') }}" class="btn btn-warning btn-sm">Login</a>
-                @endauth
+               
 
             </div>
         </div>

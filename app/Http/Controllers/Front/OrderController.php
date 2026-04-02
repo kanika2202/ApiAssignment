@@ -14,7 +14,7 @@ class OrderController extends Controller
 {
     $order = Order::with('items')->find($id);
 
-    Mail::to('karonasim98@gmail.com')->send(new OrderMail($order));
+    Mail::to('kanikatouch34@gmail.com')->send(new OrderMail($order));
 
     return view('checkout.success', compact('order'));
 }
