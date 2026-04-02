@@ -2,10 +2,10 @@
 
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Front\ProductFrontController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -112,7 +112,47 @@ use Illuminate\Support\Facades\Mail;
 use App\Mail\OrderMail;
 
 Route::get('/test-mail', function () {
-    $order = Order::with('items')->latest()->first(); // យក order ចុងក្រោយ
-    Mail::to('karonasim98@gmail.com')->send(new OrderMail($order));
+    Mail::raw('Hello test email', function ($message) {
+        $message->to('sreynichhong52@gmail.com')
+                ->subject('Test Email');
+    });
+
     return "Email Sent!";
+});
+
+//login page
+use Illuminate\Http\Request;
+
+// ១. សម្រាប់បង្ហាញទំព័រ Login (អ្នកប្រហែលជាមានហើយ)
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
+
+// ២. សម្រាប់ទទួលទិន្នន័យពេលចុចប៊ូតុង Login (បន្ថែមថ្មី)
+Route::post('/login', function (Request $request) {
+    // កន្លែងនេះសម្រាប់ដាក់កូដឆែក អ៊ីមែល និង លេខសម្ងាត់ក្នុង Database
+    // សម្រាប់តេស្តសិន អ្នកអាចសាកល្បងឱ្យវាបង្ហាញទិន្នន័យដែលផ្ញើមក៖
+    return $request->all(); 
+});
+
+Route::get('/login', function () {
+    return view('login');
+});
+
+//register page
+
+// ១. សម្រាប់ "មើល" ទំព័រចុះឈ្មោះ (ពេលវាយ URL ឬចុច Link)
+Route::get('/register', function () {
+    return view('register'); // ឈ្មោះ file register.blade.php របស់អ្នក
+});
+
+// ២. សម្រាប់ "ទទួល" ទិន្នន័យពី Form (ពេលចុចប៊ូតុងចុះឈ្មោះ)
+Route::post('/register', function (Illuminate\Http\Request $request) {
+    // កូដសម្រាប់រក្សាទុកទិន្នន័យ
+    \App\Models\User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => bcrypt($request->password),
+    ]);
+    return redirect('/login');
 });
