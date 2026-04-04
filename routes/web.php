@@ -5,7 +5,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Front\ProductFrontController;
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -141,18 +140,24 @@ Route::get('/login', function () {
 
 //register page
 
-// ១. សម្រាប់ "មើល" ទំព័រចុះឈ្មោះ (ពេលវាយ URL ឬចុច Link)
-Route::get('/register', function () {
-    return view('register'); // ឈ្មោះ file register.blade.php របស់អ្នក
-});
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 
-// ២. សម្រាប់ "ទទួល" ទិន្នន័យពី Form (ពេលចុចប៊ូតុងចុះឈ្មោះ)
-Route::post('/register', function (Illuminate\Http\Request $request) {
-    // កូដសម្រាប់រក្សាទុកទិន្នន័យ
-    \App\Models\User::create([
+Route::post('/register', function (Request $request) {
+    // ឆែកមើលថាអ៊ីមែលជាន់គ្នា ឬខ្វះទិន្នន័យឬអត់
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    // បើត្រឹមត្រូវ ទើបបង្កើតថ្មី
+    User::create([
         'name' => $request->name,
         'email' => $request->email,
-        'password' => bcrypt($request->password),
+        'password' => Hash::make($request->password),
     ]);
-    return redirect('/login');
+
+    return redirect('/login')->with('success', 'ចុះឈ្មោះជោគជ័យ!');
 });
