@@ -2,7 +2,6 @@
 
 use App\Http\Controllers\LoginController;
 use Illuminate\Support\Facades\Route;
-
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\Front\ProductFrontController;
@@ -117,4 +116,47 @@ Route::get('/test-mail', function () {
     return "Email Sent!";
 });
 
+
+//login page
+use Illuminate\Http\Request;
+
+// ១. សម្រាប់បង្ហាញទំព័រ Login (អ្នកប្រហែលជាមានហើយ)
+Route::get('/login', function () {
+    return view('login');
+})->name('login');
+
+// ២. សម្រាប់ទទួលទិន្នន័យពេលចុចប៊ូតុង Login (បន្ថែមថ្មី)
+Route::post('/login', function (Request $request) {
+    // កន្លែងនេះសម្រាប់ដាក់កូដឆែក អ៊ីមែល និង លេខសម្ងាត់ក្នុង Database
+    // សម្រាប់តេស្តសិន អ្នកអាចសាកល្បងឱ្យវាបង្ហាញទិន្នន័យដែលផ្ញើមក៖
+    return $request->all(); 
+});
+
+Route::get('/login', function () {
+    return view('login');
+});
+
+//register page
+
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
+
+Route::post('/register', function (Request $request) {
+    // ឆែកមើលថាអ៊ីមែលជាន់គ្នា ឬខ្វះទិន្នន័យឬអត់
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|string|email|max:255|unique:users',
+        'password' => 'required|string|min:8|confirmed',
+    ]);
+
+    // បើត្រឹមត្រូវ ទើបបង្កើតថ្មី
+    User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($request->password),
+    ]);
+
+    return redirect('/login')->with('success', 'ចុះឈ្មោះជោគជ័យ!');
+});
 
