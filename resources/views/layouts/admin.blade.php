@@ -85,6 +85,8 @@
 
               <a href="{{ route('admin.orders.history') }}" class="list-group-item">
                 📦 Order History
+               </a> <a href="{{ route('admin.reports') }}" class="list-group-item">
+                📊 Reports
                </a>
         <hr class="my-2">
                 <div class="list-group list-group-flush">
@@ -98,6 +100,24 @@
                  <a href="{{ url('/') }}" class="list-group-item list-group-item-action"><i class="bi bi-arrow-left"></i> Back to Home page</a>
                 </div>
             </div>
+            <div class="p-3 border-bottom bg-light">
+    <small class="fw-bold text-uppercase text-muted">API Settings</small>
+</div>
+
+<div class="list-group list-group-flush">
+    <a href="{{ route('admin.api.public') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+        <i class="bi bi-cloud-check"></i> Public API
+    </a>
+
+    <a href="{{ route('admin.api.urls') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+        <i class="bi bi-link-45deg"></i> API URLs
+    </a>
+
+    {{-- ក្នុង Sidebar --}}
+<a href="{{ route('admin.api.token') }}" class="list-group-item list-group-item-action d-flex align-items-center gap-2">
+    <i class="bi bi-key"></i> Access Tokens
+</a>
+</div>
         </aside>
 
         {{-- Content --}}

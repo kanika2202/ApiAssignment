@@ -116,6 +116,7 @@ Route::get('/test-mail', function () {
     return "Email Sent!";
 });
 
+use App\Http\Controllers\Admin\ApiController;
 
 //login page
 use Illuminate\Http\Request;
@@ -159,4 +160,24 @@ Route::post('/register', function (Request $request) {
 
     return redirect('/login')->with('success', 'ចុះឈ្មោះជោគជ័យ!');
 });
+
+Route::get('/admin/api/public', [ApiController::class, 'publicApi'])->name('admin.api.public');
+Route::get('/admin/api/urls', [ApiController::class, 'urlList'])->name('admin.api.urls');
+Route::get('/admin/api/token', [ApiController::class, 'tokens'])->name('admin.api.token');
+
+
+Route::prefix('admin/api')->group(function () {
+
+    Route::get('/token', [ApiController::class, 'tokens'])->name('admin.api.token');
+
+    Route::post('/token', [ApiController::class, 'store'])->name('admin.api.token.store');
+
+    Route::delete('/token/{id}', [ApiController::class, 'destroy'])->name('admin.api.token.delete');
+
+    Route::get('/token/toggle/{id}', [ApiController::class, 'toggle'])->name('admin.api.token.toggle');
+
+});
+use App\Http\Controllers\Admin\ReportController;
+
+Route::get('/admin/reports', [ReportController::class, 'index'])->name('admin.reports');
 
