@@ -30,7 +30,7 @@ Route::get('/category/{id}/products', [ProductsController::class, 'getByCategory
 // 2. PRIVATE API (ប្រើ Middleware 'access.token' ដើម្បីការពារ)
 // =============================================================
 
-Route::middleware('access.token')->group(function () {
+
 
     // កន្លែងគ្រប់គ្រងផលិតផល (Admin/Private)
     Route::prefix('products')->group(function () {
@@ -49,4 +49,14 @@ Route::middleware('access.token')->group(function () {
     Route::post('/place-order', [OrderApiController::class, 'placeOrder']);
     Route::get('/orders-list', [OrderApiController::class, 'listAllOrders']);
     Route::get('/order-history', [OrderApiController::class, 'orderHistory']);
-});
+    use App\Http\Controllers\Front\CategoryFrontController;
+
+   // Route សម្រាប់ទាញយកបញ្ជី Categories ទាំងអស់ជា JSON
+Route::get('/categories', [CategoryFrontController::class, 'apiIndex']);
+// routes/api.php
+
+// សម្រាប់ Cart
+Route::get('/cart-data', [App\Http\Controllers\Front\CartFrontController::class, 'apiIndex']);
+
+// សម្រាប់ Product by Category
+Route::get('/category/{id}/products', [App\Http\Controllers\Front\FrontCategoryController::class, 'categoryProducts']);

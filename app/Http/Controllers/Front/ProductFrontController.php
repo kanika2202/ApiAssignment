@@ -28,6 +28,20 @@ class ProductFrontController extends Controller
 
     return view('front.product.show', compact('product','category','related'));
 }
+public function search(Request $request)
+{
+    $query = $request->input('query');
+
+    // ស្វែងរកក្នុងតារាង Products (តាមឈ្មោះ) និង Categories (តាមឈ្មោះប្រភេទ)
+    $products = Product::where('ProductName', 'LIKE', "%{$query}%")
+        ->orWhereHas('category', function($q) use ($query) {
+            $q->where('CategoryName', 'LIKE', "%{$query}%");
+        })
+        ->latest()
+        ->paginate(12);
+
+    return view('front.search_results', compact('products', 'query'));
+}
 
 
 }

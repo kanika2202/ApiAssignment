@@ -130,18 +130,18 @@
             {{-- Right side --}}
             <div class="d-flex align-items-center gap-3">
 
-                {{-- Search --}}
-                <form class="search-box">
-                    <input type="text" class="form-control" placeholder="Search...">
-                </form>
+                 {{-- ស្វែងរកកន្លែង Search Box ក្នុង Navbar រួចប្តូរដូចខាងក្រោម --}}
+<form action="{{ route('front.search') }}" method="GET" class="search-box d-flex">
+    <div class="input-group">
+        <input type="text" name="query" class="form-control" placeholder="ស្វែងរកផ្កា ឬប្រភេទ..." value="{{ request('query') }}">
+        <button class="btn btn-warning border-0" type="submit">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+</form>
 
-                {{-- admin --}}
-                <a href="{{ url('/category') }}">
-                    <i class="bi bi-person-lock fs-5 icon-btn"></i>
-                </a>
-
-                {{-- Icons --}}
-                <i class="bi bi-heart fs-5 icon-btn"></i>
+               {{-- Icons --}}
+               <i class="bi bi-heart fs-5 icon-btn"></i>
 
                 <a href="{{ route('cart.index') }}">
                     <i class="bi bi-cart3 fs-5 icon-btn"></i>
@@ -149,7 +149,11 @@
                         {{ array_sum(array_column(session('cart', []), 'qty')) }}
                     </span>
                 </a>
-
+                @auth
+                   <a href="{{ url('/category') }}"><i class="bi bi-person fs-5 icon-btn"></i></a>
+                @else
+                    <a href="{{ url('login') }} " class="btn btn-warning btn-sm">Login</a>
+                @endauth
                
 
             </div>

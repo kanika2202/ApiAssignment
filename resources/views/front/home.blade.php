@@ -162,7 +162,7 @@ body {
             </a>
         </div>
         <div class="col-md-6 text-center">
-            <img src="{{ asset('banner.png') }}" class="img-fluid rounded-4">
+            <img src="{{ asset('img/hello.webp') }}" class="img-fluid rounded-4">
         </div>
     </div>
 </div>

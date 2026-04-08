@@ -39,7 +39,7 @@
             </a>
         </div>
         <div class="col-md-6 text-center">
-            <img src="{{ asset('banner.png') }}" class="img-fluid rounded-4">
+            <img src="{{ asset('img/hello.webp') }}" class="img-fluid rounded-4">
         </div>
     </div>
 </div>
@@ -50,7 +50,14 @@
     {{-- ១. របារ Search និង Sort --}}
     <div class="row mb-4">
         <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="Search">
+            <form action="{{ route('front.search') }}" method="GET" class="search-box d-flex">
+    <div class="input-group">
+        <input type="text" name="query" class="form-control" placeholder="ស្វែងរកផ្កា ឬប្រភេទ..." value="{{ request('query') }}">
+        <button class="btn btn-warning border-0" type="submit">
+            <i class="bi bi-search"></i>
+        </button>
+    </div>
+</form>
         </div>
         <div class="col-md-8 text-end">
             <select class="form-select w-auto d-inline-block">
@@ -58,7 +65,6 @@
             </select>
         </div>
     </div>
-
     {{-- ២. ប៊ូតុង Category Filter (Horizontal Scroll) --}}
     @foreach($categories as $cat)
     <a href="{{ route('front.category.products', $cat->id) }}"
